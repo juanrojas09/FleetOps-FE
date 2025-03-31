@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 142 76% 36%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 230 15% 15%;
+    /* Darker background for better contrast */
+    --foreground: 210 40% 95%;
+    /* Slightly lighter foreground for readability */
+
+    --card: 230 15% 18%;
+    /* Slightly lighter card background */
+    --card-foreground: 210 40% 95%;
+
+    --popover: 230 15% 18%;
+    --popover-foreground: 210 40% 95%;
+
+    --primary: 210 30% 40%;
+    /* Blue-gray tone for primary */
+    --primary-foreground: 222.2 47.4% 12%;
+
+    --secondary: 210 20% 35%;
+    /* Blue-gray tone for secondary */
+    --secondary-foreground: 210 40% 95%;
+
+    --muted: 210 20% 35%;
+    /* Blue-gray tone for muted */
+    --muted-foreground: 210 15% 60%;
+
+    --accent: 210 25% 50%;
+    /* Blue-gray tone for accent */
+    --accent-foreground: 210 40% 95%;
+
+    --destructive: 0 70% 50%;
+    /* Adjusted redAccent for better visibility */
+    --destructive-foreground: 210 40% 95%;
+
+    --border: 210 15% 30%;
+    /* Blue-gray tone for border */
+    --input: 210 15% 30%;
+    --ring: 210 25% 60%;
+    /* Softer blue-gray ring color */
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
