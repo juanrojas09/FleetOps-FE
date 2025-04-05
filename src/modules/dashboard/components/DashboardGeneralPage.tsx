@@ -46,7 +46,7 @@ const topVehicles = [
   { patent: "AC875CG", cost: 987650, driver: "Martín Rodriguez" },
 ]
 
-function DashboardGeneral() {
+function DashboardGeneralPage() {
   const [periodType, setPeriodType] = useState("mes")
 
   // Función para formatear números grandes con separadores de miles
@@ -301,7 +301,13 @@ function DashboardGeneral() {
               {topVehicles.map((vehicle, index) => (
                 <tr key={index} className="border-b">
                   <td className="py-3 px-4 font-medium">{vehicle.patent}</td>
-                  <td className="py-3 px-4">{vehicle.driver}</td>
+                  <div>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-2 bg-slate-300/20 rounded-md px-2 py-1">
+                    {vehicle.driver}
+                    </div>
+                    </td>
+                  </div>
                   <td className="py-3 px-4 text-right">{formatCurrency(vehicle.cost)}</td>
                   <td className="py-3 px-4 text-center">
                     <button className="text-xs text-blue-600 hover:underline">Ver Detalle</button>
@@ -316,5 +322,5 @@ function DashboardGeneral() {
   )
 }
 
-export default DashboardGeneral
+export default DashboardGeneralPage
 

@@ -129,7 +129,7 @@ export default function OperativeCosts() {
   const [previousAverageCost, setPreviousAverageCost] = useState(456900)
   const [activeVehicles, setActiveVehicles] = useState(24)
 
-  // Calcular variaciones porcentuales
+  // variaciones porcentuales
   const costVariation = (((totalOperativeCosts - previousPeriodCosts) / previousPeriodCosts) * 100).toFixed(1)
   const averageCostVariation = (((averageCostPerVehicle - previousAverageCost) / previousAverageCost) * 100).toFixed(1)
 
@@ -179,7 +179,6 @@ export default function OperativeCosts() {
 
   return (
     <div className="space-y-6">
-      {/* Encabezado y selector de período */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold">Costos Operativos</h1>
@@ -193,6 +192,7 @@ export default function OperativeCosts() {
               onChange={handlePeriodChange}
               className="text-sm bg-transparent border-none focus:outline-none"
             >
+                {/* TODO: esti tuebe qye ser dinamico */}
               <option value="Jun 2025">Junio 2025</option>
               <option value="May 2025">Mayo 2025</option>
               <option value="Abr 2025">Abril 2025</option>

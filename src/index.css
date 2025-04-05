@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 97%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -38,7 +38,7 @@
   .dark {
     --background: 230 15% 15%;
     /* Darker background for better contrast */
-    --foreground: 210 40% 95%;
+    --foreground: 210 40% 80%;
     /* Slightly lighter foreground for readability */
 
     --card: 230 15% 18%;
@@ -75,6 +75,8 @@
     /* Softer blue-gray ring color */
 
     --radius: 0.5rem;
+    /* visible font */
+    
   }
 }
 
