@@ -34,6 +34,7 @@
     "react-dom": "^19.1.0",
     "react-mui-sidebar": "^1.6.3",
     "react-scripts": "^5.0.1",
+    "recharts": "^2.15.2",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^4.9.5",
