@@ -87,7 +87,7 @@ export interface Part {
   
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-              <DialogContent className="overflow-y-auto max-h-[80vh]">
+        <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>
               {parts.length > 0
