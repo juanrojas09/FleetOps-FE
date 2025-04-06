@@ -59,7 +59,7 @@ export function Sidebar({ className, children }: { className?: string; children?
             </div>
             
             <SidebarGroup title="Gestión de activos" icon={<TruckIcon className="h-4 w-4" />}>
-              <SidebarItem to="/activos/itv" title="Flota de Vehiculos" active={pathname === "/activos/itv"} />
+              <SidebarItem to="/gestion-activos/flota" title="Flota de Vehiculos" active={pathname === "/gestion-activos/flota"} />
         
             </SidebarGroup>
             

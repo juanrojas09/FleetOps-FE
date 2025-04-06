@@ -5,11 +5,13 @@ import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { Sidebar } from './common/components/Sidebar';
 import { ThemeProvider } from './providers/theme-provider';
 
-import OperativeCosts from './modules/dashboard/components/OperativeCosts';
-import DashboardGeneralPage from './modules/dashboard/components/DashboardGeneralPage';
-import { FuelChargeCostPage } from './modules/dashboard/components/FuelChargeCostPage';
-import { RoutingCostsPage } from './modules/dashboard/components/RoutingCostsPage';
-import { AlertsAndNewsPage } from './modules/dashboard/components/AlertsAndNewsPage';
+import OperativeCosts from './modules/dashboard/pages/OperativeCosts';
+import DashboardGeneralPage from './modules/dashboard/pages/DashboardGeneralPage';
+import { FuelChargeCostPage } from './modules/dashboard/pages/FuelChargeCostPage';
+import { RoutingCostsPage } from './modules/dashboard/pages/RoutingCostsPage';
+import { AlertsAndNewsPage } from './modules/dashboard/pages/AlertsAndNewsPage';
+import VehicleFleetPage from './modules/fleet-management/pages/VehicleFleetPage';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
             <Route path="/vehiculos/costos-carga" element={<FuelChargeCostPage />} />
             <Route path="/vehiculos/costos-distancias" element={<RoutingCostsPage />} />
             <Route path="/vehiculos/alertas" element={<AlertsAndNewsPage />} />
+            <Route path="/gestion-activos/flota" element={<VehicleFleetPage />} />
      
           
           </Routes>
