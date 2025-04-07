@@ -19,8 +19,8 @@ export function Sidebar({ className, children }: { className?: string; children?
   
   return (
     <div className="flex min-h-screen">
-      <div className={cn(
-        "flex flex-col w-64 bg-card text-card-foreground border-r border-border",
+  <div className={cn(
+        "h-screen sticky top-0 flex flex-col w-64 bg-card text-card-foreground border-r border-border",
         className
       )}>
         <div className="flex h-14 items-center border-b px-4">
@@ -124,7 +124,7 @@ export function Sidebar({ className, children }: { className?: string; children?
               </Avatar>
               <div>
                 <p className="text-sm font-medium">Mateo</p>
-                {/* <p className="text-xs text-muted-foreground">Designer</p> */}
+                
               </div>
             </div>
         <Button

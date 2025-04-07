@@ -339,10 +339,7 @@ export function InterventionsForm({
       )}
 
       <div className="flex justify-between mt-8">
-        <Button variant="outline" className="gap-2" onClick={onPrevious}>
-          <ArrowLeft className="h-4 w-4" />
-          Volver
-        </Button>
+    
 
 
       </div>
