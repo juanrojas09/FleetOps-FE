@@ -1,10 +1,13 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../common/ui/table"
 import { Badge } from "../../../../common/ui/badge"
 import { Vehicle } from "../../../../models/Types/VehicleFleetTypes"
+import { Pencil, Trash2 } from "lucide-react"
+import { Button } from "../../../../common/ui/button"
+import { useState } from "react"
 
 
 interface MaintenanceReportContentProps {
@@ -14,75 +17,95 @@ interface MaintenanceReportContentProps {
   year: number
 }
 
+
 export function MaintenanceReportContentPage({ vehicle, periodType, month, year }: MaintenanceReportContentProps) {
+  const [viewType, setViewType] = useState<"monthly" | "annual">("monthly")
+
   // Datos simulados para el reporte
   const maintenanceData = [
     {
       id: 1,
-      date: "05/03/2025",
-      type: "Cambio de Aceite",
-      description: "Cambio de aceite y filtros",
-      laborCost: 25000,
-      partsCost: 45000,
-      totalCost: 70000,
-      status: "Finalizado",
-      operator: "Fernando Perez",
+      plate: "MFJ 072",
+      date: "04/07/2025",
+      type: "SERVICE VEHICULOS",
+      description: "Compra de filtros",
+      laborCost: 32000,
+      partsCost: 32000,
+      totalCost: 64000,
+      kmAtMoment: 121000,
     },
     {
       id: 2,
+      plate: "MFJ 072",
       date: "12/03/2025",
       type: "Reparación",
       description: "Reparación de frenos",
       laborCost: 35000,
       partsCost: 65000,
       totalCost: 100000,
-      status: "Finalizado",
-      operator: "Carlos Gutierrez",
+      kmAtMoment: 118500,
     },
     {
       id: 3,
-      date: "20/03/2025",
+      plate: "MFJ 072",
+      date: "20/01/2025",
       type: "Mantenimiento Preventivo",
       description: "Revisión general",
       laborCost: 30000,
       partsCost: 20000,
       totalCost: 50000,
-      status: "Finalizado",
-      operator: "Fernando Perez",
+      kmAtMoment: 115000,
     },
     {
       id: 4,
-      date: "28/03/2025",
+      plate: "MFJ 072",
+      date: "15/12/2024",
       type: "Cambio de Neumáticos",
       description: "Cambio de 2 neumáticos delanteros",
       laborCost: 15000,
       partsCost: 120000,
       totalCost: 135000,
-      status: "En proceso",
-      operator: "Carlos Gutierrez",
+      kmAtMoment: 112000,
     },
   ]
 
-  // Datos para el gráfico de distribución de costos
-  const costDistributionData = [
-    { name: "Mano de Obra", value: 105000, color: "#3b82f6" },
-    { name: "Repuestos", value: 250000, color: "#f59e0b" },
+  // Datos para el gráfico de mantenimiento por mes con kilometraje
+  const maintenanceByMonthData = [
+    { month: "Ene", count: 3, mileage: 115000 },
+    { month: "Feb", count: 2, mileage: 117000 },
+    { month: "Mar", count: 1, mileage: 118500 },
+    { month: "Abr", count: 2, mileage: 120000 },
+    { month: "May", count: 1, mileage: 121000 },
+    { month: "Jun", count: 0, mileage: 121000 },
+    { month: "Jul", count: 0, mileage: 121000 },
+    { month: "Ago", count: 0, mileage: 121000 },
+    { month: "Sep", count: 0, mileage: 121000 },
+    { month: "Oct", count: 0, mileage: 121000 },
+    { month: "Nov", count: 0, mileage: 121000 },
+    { month: "Dic", count: 0, mileage: 121000 },
   ]
 
-  // Datos para el gráfico de tipos de intervenciones
-  const interventionTypesData = [
-    { name: "Cambio de Aceite", value: 1, color: "#10b981" },
-    { name: "Reparación", value: 1, color: "#ef4444" },
-    { name: "Mantenimiento Preventivo", value: 1, color: "#8b5cf6" },
-    { name: "Cambio de Neumáticos", value: 1, color: "#f97316" },
+  // Datos para el gráfico de evolución de costos
+  const costEvolutionData = [
+    { date: "2024-10", cost: 180000 },
+    { date: "2024-11", cost: 220000 },
+    { date: "2024-12", cost: 135000 },
+    { date: "2025-01", cost: 50000 },
+    { date: "2025-02", cost: 150000 },
+    { date: "2025-03", cost: 300000 },
+    { date: "2025-04", cost: 210000 },
   ]
 
-  // Datos para el gráfico de costos por tipo
-  const costsByTypeData = [
-    { name: "Cambio de Aceite", cost: 70000 },
-    { name: "Reparación", cost: 100000 },
-    { name: "Mantenimiento Preventivo", cost: 50000 },
-    { name: "Cambio de Neumáticos", cost: 135000 },
+  // Datos para el gráfico de frecuencia entre mantenimientos
+  const frequencyData = [
+    { range: "25.0", frequency: 1, trend: 0.5 },
+    { range: "27.5", frequency: 0, trend: 0.6 },
+    { range: "30.0", frequency: 2, trend: 0.8 },
+    { range: "32.5", frequency: 0, trend: 1.0 },
+    { range: "35.0", frequency: 0, trend: 0.9 },
+    { range: "37.5", frequency: 0, trend: 0.8 },
+    { range: "40.0", frequency: 1, trend: 0.6 },
+    { range: "42.5", frequency: 0, trend: 0.5 },
   ]
 
   // Función para formatear moneda
@@ -99,221 +122,220 @@ export function MaintenanceReportContentPage({ vehicle, periodType, month, year 
 
   // Calcular totales
   const totalCost = maintenanceData.reduce((sum, item) => sum + item.totalCost, 0)
-  const totalLaborCost = maintenanceData.reduce((sum, item) => sum + item.laborCost, 0)
-  const totalPartsCost = maintenanceData.reduce((sum, item) => sum + item.partsCost, 0)
-  const completedInterventions = maintenanceData.filter((item) => item.status === "Finalizado").length
-  const inProgressInterventions = maintenanceData.filter((item) => item.status === "En proceso").length
+  const annualCost = 60000 // Simulado para el ejemplo
 
-  // Función para obtener el color de la etiqueta de estado
-  const getStatusBadgeColor = (status: string) => {
-    switch (status) {
-      case "Finalizado":
-        return "bg-green-100 text-green-800"
-      case "En proceso":
-        return "bg-amber-100 text-amber-800"
-      case "Pendiente":
-        return "bg-blue-100 text-blue-800"
-      default:
-        return "bg-gray-100 text-gray-800"
+  // Filtrar datos según el tipo de vista (mensual/anual)
+  const filteredMaintenanceData = maintenanceData.filter((item) => {
+    if (viewType === "monthly") {
+      const itemDate = new Date(item.date.split("/").reverse().join("-"))
+      return itemDate.getMonth() + 1 === month && itemDate.getFullYear() === year
     }
-  }
+    return true
+  })
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-green-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-green-600"
-              >
-                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Costo Total</p>
-              <p className="text-2xl font-bold">{formatCurrency(totalCost)}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-blue-600"
-              >
-                <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h6.9c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V3.6c0-.4-.2-.8-.5-1.1-.3-.3-.7-.5-1.1-.5Z"></path>
-                <path d="M6 4v16"></path>
-                <path d="M10 4v16"></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Mano de Obra</p>
-              <p className="text-2xl font-bold">{formatCurrency(totalLaborCost)}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-amber-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-amber-600"
-              >
-                <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Repuestos</p>
-              <p className="text-2xl font-bold">{formatCurrency(totalPartsCost)}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-purple-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-purple-600"
-              >
-                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                <path d="m9 12 2 2 4-4"></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Intervenciones</p>
-              <p className="text-2xl font-bold">
-                {completedInterventions} / {maintenanceData.length}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold">Historial de Intervenciones</h2>
+        <div className="flex space-x-2">
+          <Button
+            variant={viewType === "monthly" ? "default" : "outline"}
+            onClick={() => setViewType("monthly")}
+            className="h-8"
+          >
+            Mensual
+          </Button>
+          <Button
+            variant={viewType === "annual" ? "default" : "outline"}
+            onClick={() => setViewType("annual")}
+            className="h-8"
+          >
+            Anual
+          </Button>
+        </div>
       </div>
 
+      {/* Tabla resumen de intervenciones */}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Fecha</TableHead>
+              <TableHead>Tipo Intervención</TableHead>
+              <TableHead>Descripción</TableHead>
+              <TableHead>Costo Intervención</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredMaintenanceData.length > 0 ? (
+              filteredMaintenanceData.map((intervention) => (
+                <TableRow key={intervention.id}>
+                  <TableCell>{intervention.date}</TableCell>
+                  <TableCell>{intervention.type}</TableCell>
+                  <TableCell>{intervention.description}</TableCell>
+                  <TableCell>{formatCurrency(intervention.totalCost)}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center py-4">
+                  No hay intervenciones para el período seleccionado
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Indicadores de resumen de costo */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col">
+          <span className="text-sm font-medium mb-1">Costo Anual</span>
+          <div className="bg-green-100 text-green-800 py-2 px-4 rounded text-center font-bold">
+            {formatCurrency(annualCost)}
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-sm font-medium mb-1">Costo Total</span>
+          <div className="bg-yellow-100 text-yellow-800 py-2 px-4 rounded text-center font-bold">
+            {formatCurrency(totalCost)}
+          </div>
+        </div>
+      </div>
+
+      {/* Gráficos */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Gráfico: líneas de mantenimiento por mes */}
         <Card>
-          <CardHeader>
-            <CardTitle>Distribución de Costos</CardTitle>
+          <CardHeader className="bg-gray-900 text-white py-2 px-4">
+            <CardTitle className="text-sm font-medium">
+              Uso vs Mantenimiento - Vehículo {vehicle.plate}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={costDistributionData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {costDistributionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [formatCurrency(value as number), "Costo"]} />
+                <ComposedChart data={maintenanceByMonthData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis yAxisId="left" orientation="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
                   <Legend />
-                </PieChart>
+                  <Bar yAxisId="left" dataKey="count" name="Intervenciones" fill="#8884d8" />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="mileage"
+                    name="Kilometraje"
+                    stroke="#82ca9d"
+                    activeDot={{ r: 8 }}
+                  />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
+        {/* Gráfico: Evolución de costos */}
         <Card>
-          <CardHeader>
-            <CardTitle>Costos por Tipo de Intervención</CardTitle>
+          <CardHeader className="bg-gray-900 text-white py-2 px-4">
+            <CardTitle className="text-sm font-medium">
+              Evolución de Costos de Mantenimiento - Vehículo {vehicle.plate}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={costsByTypeData}>
+                <LineChart data={costEvolutionData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip formatter={(value) => [formatCurrency(value as number), "Costo"]} />
-                  <Bar dataKey="cost" name="Costo" fill="#3b82f6" />
-                </BarChart>
+                  <Line type="monotone" dataKey="cost" name="Costo ($)" stroke="#3b82f6" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Gráfico: Frecuencia entre mantenimientos */}
+        <Card>
+          <CardHeader className="bg-gray-900 text-white py-2 px-4">
+            <CardTitle className="text-sm font-medium">
+              Frecuencia entre mantenimientos - Vehículo {vehicle.plate}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={frequencyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="range" label={{ value: "Días entre mantenimientos", position: "bottom" }} />
+                  <YAxis label={{ value: "Cantidad de ocurrencias", angle: -90, position: "insideLeft" }} />
+                  <Tooltip />
+                  <Bar dataKey="frequency" name="Frecuencia" fill="#82b1ff" />
+                  <Line type="monotone" dataKey="trend" name="Tendencia" stroke="#8884d8" strokeWidth={2} />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
       </div>
 
+      {/* Grilla detallada de intervenciones */}
       <Card>
-        <CardHeader>
-          <CardTitle>Historial de Intervenciones</CardTitle>
+        <CardHeader className="bg-gray-900 text-white py-2 px-4">
+          <CardTitle className="text-sm font-medium">Detalle de Intervenciones</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Id</TableHead>
+                  <TableHead>Patente</TableHead>
                   <TableHead>Fecha</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Descripción</TableHead>
-                  <TableHead>Mano de Obra</TableHead>
-                  <TableHead>Repuestos</TableHead>
+                  <TableHead>Tipo de intervención</TableHead>
+                  <TableHead>Gasto mano de obra</TableHead>
+                  <TableHead>Costo Repuestos</TableHead>
+                  <TableHead>Detalle</TableHead>
+                  <TableHead>Km al momento</TableHead>
                   <TableHead>Costo Total</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead>Operario</TableHead>
+                  <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {maintenanceData.map((intervention) => (
                   <TableRow key={intervention.id}>
+                    <TableCell>{intervention.id}</TableCell>
+                    <TableCell>{intervention.plate}</TableCell>
                     <TableCell>{intervention.date}</TableCell>
                     <TableCell>{intervention.type}</TableCell>
-                    <TableCell>{intervention.description}</TableCell>
                     <TableCell>{formatCurrency(intervention.laborCost)}</TableCell>
                     <TableCell>{formatCurrency(intervention.partsCost)}</TableCell>
-                    <TableCell>{formatCurrency(intervention.totalCost)}</TableCell>
+                    <TableCell>{intervention.description}</TableCell>
+                    <TableCell>{intervention.kmAtMoment.toLocaleString()}</TableCell>
+                    <TableCell className="bg-blue-100">{formatCurrency(intervention.totalCost)}</TableCell>
                     <TableCell>
-                      <Badge className={getStatusBadgeColor(intervention.status)}>{intervention.status}</Badge>
+                      <div className="flex space-x-2">
+                        <Button variant="ghost" size="icon">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
-                    <TableCell>{intervention.operator}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+          </div>
+          <div className="flex justify-end mt-2">
+            <div className="text-sm text-gray-500">
+              Rows per page: <span className="font-medium">100</span>
+            </div>
           </div>
         </CardContent>
       </Card>

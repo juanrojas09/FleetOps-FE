@@ -1,9 +1,10 @@
 
-import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../common/ui/table"
 import { Badge } from "../../../../common/ui/badge"
 import { Vehicle } from "../../../../models/Types/VehicleFleetTypes"
+import { Pencil, Trash2 } from "lucide-react"
 
 
 
@@ -13,71 +14,41 @@ interface DistanceReportContentProps {
   month: number
   year: number
 }
-
 export function DistanceReportContentPage({ vehicle, periodType, month, year }: DistanceReportContentProps) {
   // Datos simulados para el reporte
   const tripsData = [
     {
       id: 1,
-      date: "05/03/2025",
-      origin: "Buenos Aires",
-      destination: "Rosario",
-      distance: 300,
-      driver: "Fernando Perez",
-      fuelCost: 30000,
-      duration: 3.5,
-    },
-    {
-      id: 2,
-      date: "12/03/2025",
-      origin: "Rosario",
-      destination: "Córdoba",
-      distance: 400,
-      driver: "Carlos Gutierrez",
-      fuelCost: 40000,
-      duration: 4,
-    },
-    {
-      id: 3,
-      date: "18/03/2025",
-      origin: "Córdoba",
-      destination: "Buenos Aires",
-      distance: 700,
-      driver: "Fernando Perez",
-      fuelCost: 70000,
-      duration: 7.5,
-    },
-    {
-      id: 4,
-      date: "25/03/2025",
-      origin: "Buenos Aires",
-      destination: "Mar del Plata",
-      distance: 400,
-      driver: "Carlos Gutierrez",
-      fuelCost: 40000,
-      duration: 4.5,
+      patente: "MFJ 072",
+      fecha: "04/7/2025",
+      distanciaSemanal: 15,
+      distanciaMensual: 24,
+      horasDeUso: 12,
+      cantidadViajes: 4,
+      litrosConsumidos: 31,
+      servicioAsignado: "BCA",
+      responsable: "Juan Gomez",
+      costoEstimado: 120000,
     },
   ]
 
-  // Datos para el gráfico de distancia mensual
-  const monthlyDistanceData = [
-    { month: "Ene", distance: 1200, trips: 4 },
-    { month: "Feb", distance: 1500, trips: 5 },
-    { month: "Mar", distance: 1800, trips: 4 },
-    { month: "Abr", distance: 1300, trips: 3 },
-    { month: "May", distance: 1600, trips: 4 },
-    { month: "Jun", distance: 1400, trips: 3 },
+  // Datos para el gráfico de uso vs distancia
+  const monthlyUsageData = [
+    { month: "Ene", trips: 12, distance: 600 },
+    { month: "Feb", trips: 18, distance: 700 },
+    { month: "Mar", trips: 10, distance: 400 },
+    { month: "Abr", trips: 25, distance: 1000 },
+    { month: "May", trips: 9, distance: 300 },
+    { month: "Jun", trips: 6, distance: 200 },
   ]
 
-  // Datos para el gráfico de costo por km
-  const costPerKmData = [
-    { month: "Ene", costPerKm: 100 },
-    { month: "Feb", costPerKm: 105 },
-    { month: "Mar", costPerKm: 110 },
-    { month: "Abr", costPerKm: 108 },
-    { month: "May", costPerKm: 112 },
-    { month: "Jun", costPerKm: 115 },
+  // Datos para el gráfico de uso del vehículo (días activos vs inactivos)
+  const vehicleUsageData = [
+    { name: "Días Activos", value: 29 },
+    { name: "Días Inactivos", value: 71 },
   ]
+
+  const COLORS = ["#22c55e", "#ef4444"]
 
   // Función para formatear moneda
   const formatCurrency = (value: number) => {
@@ -91,219 +62,196 @@ export function DistanceReportContentPage({ vehicle, periodType, month, year }: 
       .replace("ARS", "$")
   }
 
-  // Calcular totales y promedios
-  const totalDistance = tripsData.reduce((sum, item) => sum + item.distance, 0)
-  const totalTrips = tripsData.length
-  const totalFuelCost = tripsData.reduce((sum, item) => sum + item.fuelCost, 0)
-  const avgCostPerKm = totalFuelCost / totalDistance
-  const totalDuration = tripsData.reduce((sum, item) => sum + item.duration, 0)
-  const avgSpeed = totalDistance / totalDuration
-
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-red-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-red-600"
-              >
-                <path d="M12 2v8"></path>
-                <path d="m4.93 10.93 1.41 1.41"></path>
-                <path d="M2 18h2"></path>
-                <path d="M20 18h2"></path>
-                <path d="m19.07 10.93-1.41 1.41"></path>
-                <path d="M22 22H2"></path>
-                <path d="m16 6-4 4-4-4"></path>
-                <path d="M16 18a4 4 0 0 0-8 0"></path>
-              </svg>
+        {/* Distancia Recorrida Total */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1">
+              Distancia Recorrida Total
+              <span className="float-right">Mes</span>
             </div>
-            <div>
-              <p className="text-sm font-medium">Distancia Total</p>
-              <p className="text-2xl font-bold">{totalDistance} km</p>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="text-3xl font-bold mb-2">543 KM</div>
+            <div className="flex items-center">
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">-26%</div>
+              <span className="text-xs text-gray-500 ml-2">del mes pasado</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-blue-600"
-              >
-                <path d="M8 6v6"></path>
-                <path d="M8 16h.01"></path>
-                <path d="M16 6h.01"></path>
-                <path d="M16 10h.01"></path>
-                <path d="M16 14h.01"></path>
-                <path d="M16 18h.01"></path>
-                <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-              </svg>
+        {/* Distancia Promedio por viaje */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1">
+              Distancia Promedio por viaje
+              <span className="float-right">Mes</span>
             </div>
-            <div>
-              <p className="text-sm font-medium">Viajes Realizados</p>
-              <p className="text-2xl font-bold">{totalTrips}</p>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="text-3xl font-bold mb-2">120KM</div>
+            <div className="flex items-center">
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">+27%</div>
+              <span className="text-xs text-gray-500 ml-2">del mes pasado</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-green-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-green-600"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
-                <path d="M12 18V6"></path>
-              </svg>
+        {/* Viajes Totales */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1">
+              Viajes Totales
+              <span className="float-right">Mes</span>
             </div>
-            <div>
-              <p className="text-sm font-medium">Costo por Km</p>
-              <p className="text-2xl font-bold">{formatCurrency(avgCostPerKm)}</p>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="text-3xl font-bold mb-2">54</div>
+            <div className="flex items-center">
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">+26%</div>
+              <span className="text-xs text-gray-500 ml-2">del mes pasado</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-purple-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-purple-600"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
+        {/* Responsable del auto */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1">
+              Responsable del auto
+              <span className="float-right">Mes</span>
             </div>
-            <div>
-              <p className="text-sm font-medium">Velocidad Promedio</p>
-              <p className="text-2xl font-bold">{avgSpeed.toFixed(0)} km/h</p>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="text-3xl font-bold mb-2">Juan Gomez</div>
+            <div className="flex items-center">
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">+26%</div>
+              <span className="text-xs text-gray-500 ml-2">del mes pasado</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Distancia Mensual</CardTitle>
+        {/* Gráfico combinado: Uso vs. Distancia recorrida */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1">Uso vs. Distancia Recorrida - Vehículo</div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyDistanceData}>
+                <ComposedChart data={monthlyUsageData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis yAxisId="left" orientation="left" stroke="#ef4444" />
-                  <YAxis yAxisId="right" orientation="right" stroke="#3b82f6" />
+                  <YAxis yAxisId="left" orientation="left" />
+                  <YAxis yAxisId="right" orientation="right" domain={[0, 1000]} tickFormatter={(value) => `${value}`} />
                   <Tooltip
                     formatter={(value, name) => {
-                      if (name === "distance") return [`${value} km`, "Distancia"]
-                      if (name === "trips") return [`${value}`, "Viajes"]
+                      if (name === "trips") return [`${value}`, "Cantidad de viajes"]
+                      if (name === "distance") return [`${value} km`, "KM recorridos"]
                       return [value, name]
                     }}
                   />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="distance" name="Distancia" fill="#ef4444" />
-                  <Bar yAxisId="right" dataKey="trips" name="Viajes" fill="#3b82f6" />
-                </BarChart>
+                  <Bar yAxisId="left" dataKey="trips" name="Cantidad de viajes" fill="#4f86f7" />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="distance"
+                    name="KM recorridos"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    dot={{ r: 5 }}
+                  />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Evolución Costo por Km</CardTitle>
+        {/* Gráfico de uso del vehículo (actividad diaria) */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1">Uso del Vehículo en March 2024</div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={costPerKmData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => [`${formatCurrency(value as number)}`, "Costo por Km"]} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="costPerKm"
-                    name="Costo por Km"
-                    stroke="#10b981"
-                    strokeWidth={2}
-                    dot={{ r: 5 }}
-                  />
-                </LineChart>
+                <PieChart>
+                  <Pie
+                    data={vehicleUsageData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {vehicleUsageData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => [`${value}%`, ""]} />
+                </PieChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Historial de Viajes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border">
+      {/* Tabla de registros detallados */}
+      <Card className="overflow-hidden">
+        <CardContent className="p-0">
+          <div className="rounded-md">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Id</TableHead>
+                  <TableHead>Patente</TableHead>
                   <TableHead>Fecha</TableHead>
-                  <TableHead>Origen</TableHead>
-                  <TableHead>Destino</TableHead>
-                  <TableHead>Distancia</TableHead>
-                  <TableHead>Duración</TableHead>
-                  <TableHead>Costo</TableHead>
-                  <TableHead>Conductor</TableHead>
+                  <TableHead>Distancia Semanal (km)</TableHead>
+                  <TableHead>Distancia Mensual (km)</TableHead>
+                  <TableHead>Horas de Uso</TableHead>
+                  <TableHead>Cantidad de viajes</TableHead>
+                  <TableHead>Litros Consumidos</TableHead>
+                  <TableHead>Servicio Asignado</TableHead>
+                  <TableHead>Responsable</TableHead>
+                  <TableHead>Costo Estimado</TableHead>
+                  <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {tripsData.map((trip) => (
                   <TableRow key={trip.id}>
-                    <TableCell>{trip.date}</TableCell>
-                    <TableCell>{trip.origin}</TableCell>
-                    <TableCell>{trip.destination}</TableCell>
-                    <TableCell>{trip.distance} km</TableCell>
-                    <TableCell>{trip.duration} h</TableCell>
-                    <TableCell>{formatCurrency(trip.fuelCost)}</TableCell>
-                    <TableCell>{trip.driver}</TableCell>
+                    <TableCell>{trip.id}</TableCell>
+                    <TableCell>{trip.patente}</TableCell>
+                    <TableCell>{trip.fecha}</TableCell>
+                    <TableCell>{trip.distanciaSemanal}</TableCell>
+                    <TableCell>{trip.distanciaMensual}</TableCell>
+                    <TableCell>{trip.horasDeUso}</TableCell>
+                    <TableCell>{trip.cantidadViajes}</TableCell>
+                    <TableCell>{trip.litrosConsumidos}</TableCell>
+                    <TableCell>{trip.servicioAsignado}</TableCell>
+                    <TableCell>{trip.responsable}</TableCell>
+                    <TableCell>
+                      <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-center">
+                        {formatCurrency(trip.costoEstimado)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <button className="text-blue-600 hover:text-blue-800">
+                          <Pencil size={16} />
+                        </button>
+                        <button className="text-red-600 hover:text-red-800">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -314,4 +262,3 @@ export function DistanceReportContentPage({ vehicle, periodType, month, year }: 
     </div>
   )
 }
-

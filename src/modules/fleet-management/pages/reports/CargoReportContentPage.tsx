@@ -1,10 +1,11 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../common/ui/table"
 import { Badge } from "../../../../common/ui/badge"
 import { Vehicle } from "../../../../models/Types/VehicleFleetTypes"
+import { Pencil, Trash2 } from "lucide-react"
 
 
 interface CargoReportContentProps {
@@ -19,63 +20,47 @@ export function CargoReportContentPage({ vehicle, periodType, month, year }: Car
   const cargoData = [
     {
       id: 1,
-      date: "05/03/2025",
-      type: "Materiales de construcción",
-      weight: 2500,
-      origin: "Buenos Aires",
-      destination: "Rosario",
-      distance: 300,
-      driver: "Fernando Perez",
-      cost: 30000,
-    },
-    {
-      id: 2,
-      date: "12/03/2025",
-      type: "Productos alimenticios",
-      weight: 1800,
-      origin: "Rosario",
-      destination: "Córdoba",
-      distance: 400,
-      driver: "Carlos Gutierrez",
-      cost: 40000,
-    },
-    {
-      id: 3,
-      date: "18/03/2025",
-      type: "Equipamiento industrial",
-      weight: 3200,
-      origin: "Córdoba",
-      destination: "Buenos Aires",
-      distance: 700,
-      driver: "Fernando Perez",
-      cost: 70000,
-    },
-    {
-      id: 4,
-      date: "25/03/2025",
-      type: "Materiales de construcción",
-      weight: 2800,
-      origin: "Buenos Aires",
-      destination: "Mar del Plata",
-      distance: 400,
-      driver: "Carlos Gutierrez",
-      cost: 40000,
+      patente: vehicle.plate,
+      fecha: "04/03/2025",
+      distancia: 300,
+      costeEstimado: 120000,
+      tnTransportadas: 24,
+      cantidadViajes: 1,
+      precioLitro: 1315,
+      litrosConsumidos: 45.5,
     },
   ]
 
-  // Datos para el gráfico de tipos de carga
-  const cargoTypeData = [
-    { name: "Materiales de construcción", value: 5300, color: "#f59e0b" },
-    { name: "Productos alimenticios", value: 1800, color: "#10b981" },
-    { name: "Equipamiento industrial", value: 3200, color: "#3b82f6" },
+  // Datos para el gráfico de litros y distancia por viaje con carga
+  const litersAndDistanceData = [
+    { viaje: "Viaje 1", litros: 400, distancia: 300, toneladas: 50 },
+    { viaje: "Viaje 2", litros: 300, distancia: 250, toneladas: 45 },
+    { viaje: "Viaje 3", litros: 450, distancia: 320, toneladas: 70 },
+    { viaje: "Viaje 4", litros: 350, distancia: 280, toneladas: 55 },
   ]
 
-  // Datos para el gráfico de peso por viaje
-  const weightPerTripData = [
-    { id: 1, weight: 2500, distance: 300 },
-    { id: 2, weight: 1800, distance: 400 },
-    { id: 3, weight: 3200, distance: 700 },
-    { id: 4, weight: 2800, distance: 400 },
+  // Datos para el gráfico de litros por tonelada transportada
+  const litersPerTonData = [
+    { viaje: "Viaje 1", litrosPorTonelada: 6.5 },
+    { viaje: "Viaje 2", litrosPorTonelada: 7.2 },
+    { viaje: "Viaje 3", litrosPorTonelada: 6.2 },
+    { viaje: "Viaje 4", litrosPorTonelada: 6.8 },
+  ]
+
+  // Datos para el gráfico de km por tonelada vs costo estimado
+  const kmPerTonVsCostData = [
+    { viaje: "Viaje 1", kmPorTonelada: 6.0, costoEstimado: 120000 },
+    { viaje: "Viaje 2", kmPorTonelada: 5.5, costoEstimado: 150000 },
+    { viaje: "Viaje 3", kmPorTonelada: 4.5, costoEstimado: 100000 },
+    { viaje: "Viaje 4", kmPorTonelada: 5.0, costoEstimado: 130000 },
+  ]
+
+  // Datos para el gráfico de rendimiento por tonelada
+  const performancePerTonData = [
+    { viaje: "Viaje 1", rendimiento: 3.8 },
+    { viaje: "Viaje 2", rendimiento: 5.5 },
+    { viaje: "Viaje 3", rendimiento: 3.5 },
+    { viaje: "Viaje 4", rendimiento: 4.5 },
   ]
 
   // Función para formatear moneda
@@ -90,220 +75,231 @@ export function CargoReportContentPage({ vehicle, periodType, month, year }: Car
       .replace("ARS", "$")
   }
 
-  // Calcular totales y promedios
-  const totalWeight = cargoData.reduce((sum, item) => sum + item.weight, 0)
-  const totalTrips = cargoData.length
-  const totalDistance = cargoData.reduce((sum, item) => sum + item.distance, 0)
-  const totalCost = cargoData.reduce((sum, item) => sum + item.cost, 0)
-  const avgWeightPerTrip = totalWeight / totalTrips
-  const costPerTon = totalCost / (totalWeight / 1000)
-
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-green-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-green-600"
-              >
-                <path d="M12 22V2"></path>
-                <path d="M17 22H7"></path>
-                <path d="M20 7H4"></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Peso Total</p>
-              <p className="text-2xl font-bold">{totalWeight} kg</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-blue-600"
-              >
-                <path d="M8 6v6"></path>
-                <path d="M8 16h.01"></path>
-                <path d="M16 6h.01"></path>
-                <path d="M16 10h.01"></path>
-                <path d="M16 14h.01"></path>
-                <path d="M16 18h.01"></path>
-                <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Viajes con Carga</p>
-              <p className="text-2xl font-bold">{totalTrips}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-amber-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-amber-600"
-              >
-                <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
-                <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
-                <path d="M12 3v6"></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Peso Promedio</p>
-              <p className="text-2xl font-bold">{avgWeightPerTrip.toFixed(0)} kg</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="bg-purple-100 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-purple-600"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
-                <path d="M12 18V6"></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium">Costo por Tonelada</p>
-              <p className="text-2xl font-bold">{formatCurrency(costPerTon)}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Distribución por Tipo de Carga</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={cargoTypeData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {cargoTypeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value} kg`, "Peso"]} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
+        {/* Gráfico: Litros y Distancia por Viaje con Carga Transportada */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1 flex justify-between">
+              <span>Litros y Distancia por Viaje con Carga Transportada</span>
+              <span>Mes</span>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Peso por Viaje</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={weightPerTripData}>
+                <ComposedChart data={litersAndDistanceData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="id" label={{ value: "Viaje #", position: "insideBottom", offset: -5 }} />
-                  <YAxis yAxisId="left" orientation="left" stroke="#f59e0b" />
-                  <YAxis yAxisId="right" orientation="right" stroke="#3b82f6" />
+                  <XAxis dataKey="viaje" />
+                  <YAxis yAxisId="left" orientation="left" />
+                  <YAxis yAxisId="right" orientation="right" domain={[40, 70]} />
                   <Tooltip
                     formatter={(value, name) => {
-                      if (name === "weight") return [`${value} kg`, "Peso"]
-                      if (name === "distance") return [`${value} km`, "Distancia"]
+                      if (name === "litros") return [`${value} L`, "Litros"]
+                      if (name === "distancia") return [`${value} km`, "Distancia"]
+                      if (name === "toneladas") return [`${value} Tn`, "Toneladas"]
                       return [value, name]
                     }}
                   />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="weight" name="Peso" fill="#f59e0b" />
-                  <Bar yAxisId="right" dataKey="distance" name="Distancia" fill="#3b82f6" />
+                  <Bar yAxisId="left" dataKey="litros" name="Litros" fill="#f59e0b" />
+                  <Bar yAxisId="left" dataKey="distancia" name="Distancia (km)" fill="#3b82f6" />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="toneladas"
+                    name="Toneladas"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ r: 5 }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Gráfico: Litros por Tonelada Transportada */}
+        <Card className="overflow-hidden">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1 flex justify-between">
+              <span>Litros por Tonelada Transportada</span>
+              <span>Mes</span>
+            </div>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={litersPerTonData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="viaje" />
+                  <YAxis domain={[0, 8]} />
+                  <Tooltip formatter={(value) => [`${value} L/Tn`, "Litros por Tonelada"]} />
+                  <Legend />
+                  <Bar dataKey="litrosPorTonelada" name="Litros por Tonelada" fill="#f59e0b" />
                 </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-4 flex justify-between items-center">
+              <span className="text-sm font-medium">Costo Promedio por tonelada:</span>
+              <span className="bg-green-100 text-green-800 px-3 py-1 rounded font-medium">3000$</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Coste Real vs Coste Estimado */}
+        <Card className="overflow-hidden col-span-1">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1 flex justify-between">
+              <span>Coste Real vs Coste Estimado</span>
+              <span>Mes</span>
+            </div>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="text-center">
+                <div className="text-xs font-medium mb-1">Km realizados en el período</div>
+                <div className="text-xl font-bold">400</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs font-medium mb-1">Precio del litro promedio en el período</div>
+                <div className="text-xl font-bold">1315$</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs font-medium mb-1">Km estimados a realizar en el período</div>
+                <div className="text-xl font-bold">340</div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">Costo Real:</span>
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded font-medium">60.000$</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-medium">Costo Estimado:</span>
+                <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded font-medium">50.000$</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Gráfico: Kilómetros por Tonelada vs Costo Estimado del Viaje */}
+        <Card className="overflow-hidden col-span-1">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1 flex justify-between">
+              <span>Kilómetros por Tonelada vs Costo Estimado del Viaje</span>
+              <span>Mes</span>
+            </div>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="h-[200px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={kmPerTonVsCostData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="viaje" />
+                  <YAxis yAxisId="left" orientation="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip
+                    formatter={(value, name) => {
+                      if (name === "kmPorTonelada") return [`${value} km/Tn`, "Km por Tonelada"]
+                      if (name === "costoEstimado") return [formatCurrency(value as number), "Costo Estimado"]
+                      return [value, name]
+                    }}
+                  />
+                  <Bar yAxisId="left" dataKey="kmPorTonelada" name="Km por Tonelada" fill="#3b82f6" />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="costoEstimado"
+                    name="Costo Estimado"
+                    stroke="#ef4444"
+                    strokeWidth={2}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Gráfico: Rendimiento (Km/L) ajustado por Tonelada */}
+        <Card className="overflow-hidden col-span-1">
+          <CardHeader className="p-0">
+            <div className="bg-gray-900 text-white text-xs px-2 py-1 flex justify-between">
+              <span>Rendimiento (Km/L) ajustado por Tonelada</span>
+              <span>Mes</span>
+            </div>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="h-[200px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={performancePerTonData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="viaje" />
+                  <YAxis domain={[3, 6]} />
+                  <Tooltip formatter={(value) => [`${value} km/L`, "Rendimiento"]} />
+                  <Line
+                    type="monotone"
+                    dataKey="rendimiento"
+                    name="Rendimiento"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ r: 5 }}
+                  />
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Historial de Cargas Transportadas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border">
+      {/* Tabla de registros detallados */}
+      <Card className="overflow-hidden">
+        <CardContent className="p-0">
+          <div className="rounded-md">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Id</TableHead>
+                  <TableHead>Patente</TableHead>
                   <TableHead>Fecha</TableHead>
-                  <TableHead>Tipo de Carga</TableHead>
-                  <TableHead>Peso</TableHead>
-                  <TableHead>Origen</TableHead>
-                  <TableHead>Destino</TableHead>
-                  <TableHead>Distancia</TableHead>
-                  <TableHead>Costo</TableHead>
-                  <TableHead>Conductor</TableHead>
+                  <TableHead>Distancia (Google)</TableHead>
+                  <TableHead>Coste estimado</TableHead>
+                  <TableHead>Tn transportadas</TableHead>
+                  <TableHead>Cantidad de viajes</TableHead>
+                  <TableHead>Precio por litro en este período</TableHead>
+                  <TableHead>Litros consumidos estimado</TableHead>
+                  <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {cargoData.map((cargo) => (
                   <TableRow key={cargo.id}>
-                    <TableCell>{cargo.date}</TableCell>
-                    <TableCell>{cargo.type}</TableCell>
-                    <TableCell>{cargo.weight} kg</TableCell>
-                    <TableCell>{cargo.origin}</TableCell>
-                    <TableCell>{cargo.destination}</TableCell>
-                    <TableCell>{cargo.distance} km</TableCell>
-                    <TableCell>{formatCurrency(cargo.cost)}</TableCell>
-                    <TableCell>{cargo.driver}</TableCell>
+                    <TableCell>{cargo.id}</TableCell>
+                    <TableCell>{cargo.patente}</TableCell>
+                    <TableCell>{cargo.fecha}</TableCell>
+                    <TableCell>{cargo.distancia} km</TableCell>
+                    <TableCell>
+                      <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-center">
+                        {formatCurrency(cargo.costeEstimado)}
+                      </div>
+                    </TableCell>
+                    <TableCell>{cargo.tnTransportadas}</TableCell>
+                    <TableCell>{cargo.cantidadViajes}</TableCell>
+                    <TableCell>{formatCurrency(cargo.precioLitro)}</TableCell>
+                    <TableCell>{cargo.litrosConsumidos} L</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <button className="text-blue-600 hover:text-blue-800">
+                          <Pencil size={16} />
+                        </button>
+                        <button className="text-red-600 hover:text-red-800">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -314,4 +310,3 @@ export function CargoReportContentPage({ vehicle, periodType, month, year }: Car
     </div>
   )
 }
-

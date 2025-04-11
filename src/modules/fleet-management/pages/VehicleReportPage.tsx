@@ -58,7 +58,7 @@ export function VehicleReportsPage({ isOpen, onClose, vehicle }: VehicleReportsM
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[1500px] max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             {activeTab !== "menu" && (

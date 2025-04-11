@@ -11,6 +11,7 @@ import { FuelChargeCostPage } from './modules/dashboard/pages/FuelChargeCostPage
 import { RoutingCostsPage } from './modules/dashboard/pages/RoutingCostsPage';
 import { AlertsAndNewsPage } from './modules/dashboard/pages/AlertsAndNewsPage';
 import VehicleFleetPage from './modules/fleet-management/pages/VehicleFleetPage';
+import { NewsAndAlertsPage } from './modules/notifications-alerts/pages/NewsAndAlertsPage';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/vehiculos/costos-distancias" element={<RoutingCostsPage />} />
             <Route path="/vehiculos/alertas" element={<AlertsAndNewsPage />} />
             <Route path="/gestion-activos/flota" element={<VehicleFleetPage />} />
+            <Route path="/alertas/gestion" element={< NewsAndAlertsPage/>} />
      
           
           </Routes>
