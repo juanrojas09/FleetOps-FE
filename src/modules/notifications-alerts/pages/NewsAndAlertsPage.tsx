@@ -133,19 +133,19 @@ export function NewsAndAlertsPage() {
           <div className="flex w-full">
             <TabsTrigger
               value="documentation"
-              className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:shadow-none py-2"
+              className="flex-1 rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none py-2"
             >
               ITV y Control de Documentación
             </TabsTrigger>
             <TabsTrigger
               value="interventions"
-              className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:shadow-none py-2"
+              className="flex-1 rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none py-2"
             >
               Novedades / Intervenciones
             </TabsTrigger>
             <TabsTrigger
               value="alerts"
-              className="flex-1 rounded-none data-[state=active]:bg-white data-[state=active]:shadow-none py-2"
+              className="flex-1 rounded-none data-[state=active]:bg-background data-[state=active]:shadow-none py-2"
             >
               Configuración de Alertas
             </TabsTrigger>

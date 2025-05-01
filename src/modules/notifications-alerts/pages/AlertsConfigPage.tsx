@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../common/ui/table"
 import { InterventionsNewsPage } from "./InterventionsNewsPage"
 import { RecurringInterventionsTab } from "../components/RecurringInterventionsTab"
+import { OperatorsNewsPage } from "./OperatorsNewsPage"
 
 
 
@@ -188,11 +189,7 @@ export function AlertsConfigPage() {
 
           {activeTab === "interventions" && <RecurringInterventionsTab />}
 
-          {activeTab === "operators" && (
-            <div className="flex items-center justify-center h-40">
-              <p className="text-gray-500">Contenido de Documentación Operarios en desarrollo</p>
-            </div>
-          )}
+          {activeTab === "operators" &&<OperatorsNewsPage/>}
         </div>
 
         {activeTab === "itv" && (

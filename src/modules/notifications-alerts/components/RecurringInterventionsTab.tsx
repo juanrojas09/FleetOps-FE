@@ -8,6 +8,7 @@ import { Mail, Phone, Plus, SwatchBook, Trash2, ToggleLeft, ToggleRight } from "
 import { Input } from "../../../common/ui/input"
 import { Label } from "../../../common/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../common/ui/table"
+import { Switch } from "../../../common/ui/switch"
 
 
 // Tipo de servicio preventivo
@@ -98,11 +99,10 @@ export function RecurringInterventionsTab() {
           <Label htmlFor="notifications-enabled" className="font-medium">
             Activar notificaciones
           </Label>
-          <ToggleLeft
-            id="notifications-enabled"
-            className={`cursor-pointer ${isEnabled ? "text-green-500" : "text-gray-500"}`}
-            onClick={() => setIsEnabled(!isEnabled)}
-          />
+             <Switch
+              onChange={() => setIsEnabled(!isEnabled)}
+              isChecked={isEnabled}
+            />
         </div>
       </div>
 
@@ -120,7 +120,7 @@ export function RecurringInterventionsTab() {
         <CardContent>
           <div className="rounded-md border">
             <Table>
-              <TableHeader className="bg-gray-100">
+              <TableHeader className="">
                 <TableRow>
                   <TableHead className="w-[40%]">Tipo de servicio</TableHead>
                   <TableHead className="w-[25%]">Kilometraje</TableHead>
@@ -191,10 +191,9 @@ export function RecurringInterventionsTab() {
                 Correo electrónico
               </Label>
             </div>
-            <ToggleLeft
-              id="email-notifications"
-              className={`cursor-pointer ${emailEnabled ? "text-green-500" : "text-gray-500"}`}
-              onClick={() => setEmailEnabled(!emailEnabled)}
+            <Switch
+              onChange={() => setEmailEnabled(!emailEnabled)}
+              isChecked={emailEnabled}
             />
           </div>
           <div className="flex items-center justify-between">
@@ -204,10 +203,9 @@ export function RecurringInterventionsTab() {
                 SMS
               </Label>
             </div>
-            <ToggleLeft
-              id="sms-notifications"
-              className={`cursor-pointer ${smsEnabled ? "text-green-500" : "text-gray-500"}`}
-              onClick={() => setSmsEnabled(!smsEnabled)}
+            <Switch
+              onChange={() => setSmsEnabled(!smsEnabled)}
+              isChecked={smsEnabled}
             />
           </div>
         </CardContent>
