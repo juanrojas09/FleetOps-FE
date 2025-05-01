@@ -19,8 +19,8 @@ export function Sidebar({ className, children }: { className?: string; children?
   
   return (
     <div className="flex min-h-screen">
-      <div className={cn(
-        "flex flex-col w-64 bg-card text-card-foreground border-r border-border",
+  <div className={cn(
+        "h-screen sticky top-0 flex flex-col w-64 bg-card text-card-foreground border-r border-border",
         className
       )}>
         <div className="flex h-14 items-center border-b px-4">
@@ -44,24 +44,11 @@ export function Sidebar({ className, children }: { className?: string; children?
         </div>
         <ScrollArea className="flex-1 py-2">
           <nav className="grid gap-1 px-2">
+           
             <div className="py-2">
-              <h3 className="px-4 text-xs font-medium text-muted-foreground">
+            <h3 className="px-4 text-xs font-medium text-muted-foreground">
                 Dashboard
               </h3>
-              <div className="grid gap-1 py-1">
-                <Link
-                  to="/"
-                  className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                    pathname === "/" && "bg-accent text-accent-foreground"
-                  )}
-                >
-                  <Home className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              </div>
-            </div>
-            
             <SidebarGroup title="Vehículos" icon={<Car className="h-4 w-4" />}>
               <SidebarItem to="/vehiculos/indicadores" title="Indicadores Generales" active={pathname === "/vehiculos/indicadores"} />
               <SidebarItem to="/vehiculos/costos-operativos" title="Costos Operativos" active={pathname === "/vehiculos/costos-operativos"} />
@@ -69,20 +56,20 @@ export function Sidebar({ className, children }: { className?: string; children?
               <SidebarItem to="/vehiculos/costos-distancias" title="Costo de distancias" active={pathname === "/vehiculos/costos-distancias"} />
               <SidebarItem to="/vehiculos/alertas" title="Alertas y novedades" active={pathname === "/vehiculos/alertas"} />
             </SidebarGroup>
+            </div>
             
             <SidebarGroup title="Gestión de activos" icon={<TruckIcon className="h-4 w-4" />}>
-              <SidebarItem to="/activos/itv" title="Flota de Vehiculos" active={pathname === "/activos/itv"} />
+              <SidebarItem to="/gestion-activos/flota" title="Flota de Vehiculos" active={pathname === "/gestion-activos/flota"} />
         
             </SidebarGroup>
             
             <SidebarGroup title="Alertas y Novedades" icon={<AlertCircle className="h-4 w-4" />}>
-              <SidebarItem to="/alertas/configuracion" title="Configuración" active={pathname === "/alertas/configuracion"} />
+           
               <SidebarItem to="/alertas/gestion" title="Gestion de Novedades y Alertas " active={pathname === "/alertas/gestion"} />
             </SidebarGroup>
             
             <SidebarGroup title="Costos Generales" icon={<DollarSign className="h-4 w-4" />}>
-              <SidebarItem to="/costos/general" title="Análisis de Costos Generales" active={pathname === "/costos/general"} />
-              <SidebarItem to="/costos/graficos" title="Reportes de Costos Generales" active={pathname === "/costos/graficos"} />
+              <SidebarItem to="/costos/generales" title="Análisis de Costos Generales" active={pathname === "/costos/generales"} />
             </SidebarGroup>
             
             <SidebarGroup title="Gestión de Personal" icon={<Users className="h-4 w-4" />}>
@@ -90,7 +77,7 @@ export function Sidebar({ className, children }: { className?: string; children?
 
             </SidebarGroup>
             
-            <div className="py-2">
+            {/* <div className="py-2">
               <h3 className="px-4 text-xs font-medium text-muted-foreground">
                 Configuración
               </h3>
@@ -106,8 +93,8 @@ export function Sidebar({ className, children }: { className?: string; children?
                   Configuración
                 </Link>
               </div>
-            </div>
-               <div className="py-2">
+            </div> */}
+               {/* <div className="py-2">
               <h3 className="px-4 text-xs font-medium text-muted-foreground">
                 Roles
               </h3>
@@ -124,7 +111,7 @@ export function Sidebar({ className, children }: { className?: string; children?
                 </Link>
                 
               </div>
-            </div>
+            </div> */}
           </nav>
         </ScrollArea>
         <div className="mt-auto border-t p-4">
@@ -136,7 +123,7 @@ export function Sidebar({ className, children }: { className?: string; children?
               </Avatar>
               <div>
                 <p className="text-sm font-medium">Mateo</p>
-                {/* <p className="text-xs text-muted-foreground">Designer</p> */}
+                
               </div>
             </div>
         <Button
